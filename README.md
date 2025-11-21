@@ -1,103 +1,79 @@
-# Plantilla de servidor básico con Express y Handlebars
+#Endpoints del Servidor
 
-Este proyecto es una plantilla básica para configurar un servidor con **Express**, **Handlebars** y archivos estáticos, ideal para iniciar rápidamente nuevos desarrollos en Node.js.
+A continuación están **todos los endpoints**, agrupados por módulos.
+---
 
-## Características
+# USERS ROUTES (`/api/users`)
 
-- **Express** para gestionar rutas y middleware.
-- **Handlebars** como motor de plantillas para renderizar vistas dinámicas.
-- Configuración para servir archivos estáticos desde la carpeta `public`.
-- Configuración minimalista lista para usar.
+| Método | Ruta | Descripción |
+|-------|-------|------|-------------|
+| GET | `/api/users/` | Obtiene todos los usuarios |
+| GET | `/api/users/:uid` | Obtiene un usuario por ID |
+| POST | `/api/users/` | Crea un usuario |
+| PUT | `/api/users/:uid` |Actualiza un usuario |
+| DELETE | `/api/users/:uid` | Elimina un usuario |
+
+---
+#  PRODUCTS ROUTES (`/api/products`)
+
+| Método | Ruta | Descripción |
+|-------|-------|------|-------------|
+| GET | `/api/products` | Lista productos |
+| GET | `/api/products/:pid` | Obtiene un producto |
+| POST | `/api/products` | Crea producto |
+| PUT | `/api/products/:pid`  | Actualiza producto |
+| DELETE | `/api/products/:pid` | Elimina producto |
 
 ---
 
-## Instalación
+# 🛒 CARTS ROUTES (`/api/carts`)
 
-### 1. Clonar el repositorio con `degit`
+| Método | Ruta| Descripción |
+|-------|-------|------|-------------|
+| GET | `/api/carts/:cid` | Obtiene carrito |
+| POST | `/api/carts` | Crea un carrito |
+| POST | `/api/carts/:cid/product/:pid` | Agrega producto |
+| POST | `/api/carts/:cid/purchase` | Finaliza compra |
+| DELETE | `/api/carts/:cid/product/:pid` | Elimina producto del carrito |
+| DELETE | `/api/carts/:cid` | Vacía el carrito |
 
-`degit` es una herramienta para clonar plantillas de manera limpia (sin el historial de Git).
+# SESSIONS ROUTES (`/api/sessions`)
 
-#### Instalar `degit` (si no lo tienes instalado)
-
-```bash
-npm install -g degit
-```
-
-#### Clonar el repositorio
-
-```bash
-degit DanielRiverol/template-express-handlebars carpeta-destino
-```
-
-Reemplaza `usuario/repo-nombre` por el nombre del repositorio y `carpeta-destino` por el nombre de la carpeta donde deseas clonar el proyecto.
-
-### 2. Instalar dependencias
-
-Una vez clonado el repositorio, entra en la carpeta del proyecto:
-
-```bash
-cd carpeta-destino
-```
-
-Luego, instala las dependencias:
-
-```bash
-npm install
-```
+| Método | Ruta | Descripción |
+|-------|-------|------|-------------|
+| POST | `/api/sessions/register`| Registro de usuario |
+| POST | `/api/sessions/login` | Login |
+| GET | `/api/sessions/current` | Usuario autenticado actual |
+| POST | `/api/sessions/recover` | Envía email con token para resetear password |
+| POST | `/api/sessions/restore` | Restablece password con token |
+| POST | `/api/sessions/logout` | Cierra sesión |
 
 ---
 
-## Comandos disponibles
+##  **Flujo de Recuperación de Contraseña**
 
-### Iniciar el servidor
+1. Enviás un POST a:
 
-Este comando inicia el servidor en modo desarrollo:
-
-```bash
-npm start
+```
+POST /api/sessions/recover
+Body: { "email": "tucorreo@example.com" }
 ```
 
-### Actualizar dependencias (Opcional)
+2. Te llega un email con un botón.  
+   Al hacer clic, se abre una página que muestra el **token en la URL** en la parte superior.
 
-Para actualizar todas las dependencias a sus últimas versiones, instala `npm-check-updates` de forma global:
+   **Debés copiar ese token**.
 
-```bash
-npm install -g npm-check-updates
+3. En Postman llamás a:
+
+```
+POST /api/sessions/restore
+Body: {
+  "token": "EL_TOKEN_QUE_TE_LLEGÓ",
+  "newPassword": "tuNuevaPassword"
+}
 ```
 
-Luego, ejecuta el siguiente comando para actualizar las dependencias:
+4. Si todo sale bien, la Password debería de ser cambiada.
 
-```bash
-ncu -u
-```
 
-Esto modificará tu archivo `package.json` para que todas las dependencias estén en sus últimas versiones.
-
-Finalmente, instala las dependencias actualizadas:
-
-```bash
-npm install
-```
-
-## Estructura del proyecto
-
-```plaintext
-carpeta-destino/
-├── public/                   # Archivos estáticos (CSS, JS, imágenes)
-│   ├── css/
-│   
-│   
-├── src/
-│   └── views/                # Plantillas de Handlebars
-│       ├── layouts/          # Layouts para las vistas
-│       └── home.handlebars   # Vista principal
-├── index.js                    # Archivo principal del servidor
-├── package.json              # Dependencias y configuración del proyecto
-├── README.md                 # Documentación del proyecto
-```
-
----
-
-## Licencia
-
-Este proyecto está licenciado bajo la licencia **MIT**. Consulta el archivo [LICENSE](./LICENSE) para más detalles.
